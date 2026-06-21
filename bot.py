@@ -1,3 +1,4 @@
+import os
 import logging
 import requests
 import httpx
@@ -7,7 +8,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from telegram.request import HTTPXRequest
 
 # ========== CONFIG ==========
-BOT_TOKEN = "YOUR_TOKEN"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 VEHICLE_API = "https://sbsakib.eu.cc/apis/vehicle_advance?key=Demo&rc="
 PINCODE_API = "https://sbsakib.eu.cc/apis/pincode_info?key=Demo&pincode="
 IFSC_API    = "https://sbsakib.eu.cc/apis/ifsc_info?key=Demo&ifsc="
