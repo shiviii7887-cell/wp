@@ -21,13 +21,11 @@ CH1_LINK = "https://t.me/ruchika_ownss"
 
 async def is_user_joined(bot, user_id):
     try:
-        mem1 = await bot.get_chat_member(CH1_ID, user_id)
-        ch1 = mem1.status not in ['left', 'kicked']
-                
-        return ch1
+        member = await bot.get_chat_member(CH1_ID, user_id)
+        return member.status not in ["left", "kicked"]
     except Exception as e:
         print(f"Join check error: {e}")
-        return True
+        return False
 
 def get_join_message(user_name):
     text = (
