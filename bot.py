@@ -7,12 +7,12 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from telegram.request import HTTPXRequest
 
 # ========== CONFIG ==========
-BOT_TOKEN = "8628228711:AAE1sE5dJQtdT-eqzs8vPfulPan7mA7OuZw"
+BOT_TOKEN = "YOUR_TOKEN"
 VEHICLE_API = "https://sbsakib.eu.cc/apis/vehicle_advance?key=Demo&rc="
 PINCODE_API = "https://sbsakib.eu.cc/apis/pincode_info?key=Demo&pincode="
 IFSC_API    = "https://sbsakib.eu.cc/apis/ifsc_info?key=Demo&ifsc="
 IP_API      = "https://sbsakib.eu.cc/apis/ip_info?key=Demo&ip="
-CH1_ID = "@ruchika_ownss"
+CH1_ID = "@your_channel"
 CH1_LINK = "https://t.me/ruchika_ownss"
 
 
@@ -94,7 +94,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "📱 Number Lookup: `/num 9876543210`\n"
         "📱 TG Lookup: `/tg 4589174428`\n"
         "🪪 Aadhaar Lookup: `/aadhar 54958327738`\n"
-        "💳 UPI Info:     `/upi username@paytm"
+        "💳 UPI Info:     `/upi username@paytm`\n"
         "🚗 Vehicle RC:    `/rc DL10CA7539`\n"
         "📮 Pincode Info:  `/pin 110001`\n"
         "🏦 IFSC Info:     `/ifsc SBIN0004843`\n"
