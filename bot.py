@@ -90,15 +90,18 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
 @require_join
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "👋 *Lookup Bot*\n\n"
+        "🔥 *LOOKUP INFO BOT*\n\n"
+
         "📱 Number Lookup: `/num 9876543210`\n"
         "📱 TG Lookup: `/tg 4589174428`\n"
         "🪪 Aadhaar Lookup: `/aadhar 54958327738`\n"
-        "💳 UPI Info:     `/upi username@paytm`\n"
-        "🚗 Vehicle RC:    `/rc DL10CA7539`\n"
-        "📮 Pincode Info:  `/pin 110001`\n"
-        "🏦 IFSC Info:     `/ifsc SBIN0004843`\n"
-        "🌐 IP Info:       `/ip 8.8.8.8`",
+        "💳 UPI Info: `/upi username@paytm`\n"
+        "🚗 Vehicle RC: `/rc DL10CA7539`\n"
+        "📮 Pincode Info: `/pin 110001`\n"
+        "🏦 IFSC Info: `/ifsc SBIN0004843`\n"
+        "🌐 IP Info: `/ip 8.8.8.8`\n\n"
+
+        "⚠️ Some services are currently under maintenance.",
         parse_mode="Markdown"
     )
 
