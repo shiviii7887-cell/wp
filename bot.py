@@ -92,6 +92,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "👋 *Lookup Bot*\n\n"
         "📱 Number Lookup: `/num 9876543210`\n"
+        "📱 TG Lookup: `/tg 4589174428`\n"
+        "🪪 Aadhaar Lookup: `/aadhar 54958327738`\n"
+        "💳 UPI Info:     `/upi username@paytm"
         "🚗 Vehicle RC:    `/rc DL10CA7539`\n"
         "📮 Pincode Info:  `/pin 110001`\n"
         "🏦 IFSC Info:     `/ifsc SBIN0004843`\n"
@@ -282,6 +285,9 @@ def main():
     app.add_handler(CommandHandler("pin", maintenance))
     app.add_handler(CommandHandler("ifsc", maintenance))
     app.add_handler(CommandHandler("ip", maintenance))
+    app.add_handler(CommandHandler("tg", maintenance))
+    app.add_handler(CommandHandler("aadhar", maintenance))
+    app.add_handler(CommandHandler("upi", maintenance))
 
     app.add_handler(
         CallbackQueryHandler(
