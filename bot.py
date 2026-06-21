@@ -13,8 +13,8 @@ VEHICLE_API = "https://sbsakib.eu.cc/apis/vehicle_advance?key=Demo&rc="
 PINCODE_API = "https://sbsakib.eu.cc/apis/pincode_info?key=Demo&pincode="
 IFSC_API    = "https://sbsakib.eu.cc/apis/ifsc_info?key=Demo&ifsc="
 IP_API      = "https://sbsakib.eu.cc/apis/ip_info?key=Demo&ip="
+CH1_ID = os.getenv("CH1_ID")
 CH1_LINK = os.getenv("CH1_LINK")
-CH1_LINK = "https://t.me/ruchika_ownss"
 
 
 # ── Join Check ───────────────────────────────────────────────────────────────
