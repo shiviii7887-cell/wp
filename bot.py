@@ -1,7 +1,7 @@
 import os
 import logging
-import requests
 import httpx
+import json
 from telegram.ext import CallbackQueryHandler
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
@@ -13,9 +13,8 @@ VEHICLE_API = "https://sbsakib.eu.cc/apis/vehicle_advance?key=Demo&rc="
 PINCODE_API = "https://sbsakib.eu.cc/apis/pincode_info?key=Demo&pincode="
 IFSC_API    = "https://sbsakib.eu.cc/apis/ifsc_info?key=Demo&ifsc="
 IP_API      = "https://sbsakib.eu.cc/apis/ip_info?key=Demo&ip="
-CH1_ID = os.getenv("CH1_ID")
-CH1_LINK = os.getenv("CH1_LINK")
-
+CH1_ID      = os.getenv("CH1_ID", "@ruchika_ownss")
+CH1_LINK    = os.getenv("CH1_LINK", "https://t.me/ruchika_ownss")
 
 # ── Join Check ───────────────────────────────────────────────────────────────
 
@@ -33,10 +32,7 @@ def get_join_message(user_name):
         "Please Join All My Update Channels To Use Me! 🔒"
     )
     markup = InlineKeyboardMarkup([
-        [
-            InlineKeyboardButton("📢 Join Channel 1", url=CH1_LINK)
-            
-        ],
+        [InlineKeyboardButton("📢 Join Channel 1", url=CH1_LINK)],
         [InlineKeyboardButton("♻️ Try Again", callback_data="verify_join")],
     ])
     return text, markup
@@ -90,7 +86,6 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🔥 *LOOKUP INFO BOT*\n\n"
-
         "📱 Number Lookup: `/num 9876543210`\n"
         "📱 TG Lookup: `/tg 4589174428`\n"
         "🪪 Aadhaar Lookup: `/aadhar 54958327738`\n"
@@ -99,7 +94,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "📮 Pincode Info: `/pin 110001`\n"
         "🏦 IFSC Info: `/ifsc SBIN0004843`\n"
         "🌐 IP Info: `/ip 8.8.8.8`\n\n"
-
         "⚠️ Some services are currently under maintenance.",
         parse_mode="Markdown"
     )
@@ -109,17 +103,75 @@ async def num_lookup(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Number daal!\nExample: `/num 9876543210`", parse_mode="Markdown")
         return
 
-    number = context.args[0].strip().replace("+","").replace(" ","").replace("-","")
+    number = context.args[0].strip().replace("+", "").replace(" ", "").replace("-", "")
     if not number.isdigit() or len(number) < 8:
         await update.message.reply_text("❌ Valid number daal (sirf digits)!")
         return
 
-    await update.message.reply_text(
-        f"📱 *Number:* `{number}`\n\n"
-        "🔍 Is number ki info ke liye owner se contact karo:\n"
-        "👉 @ruchika\\_owns",
-        parse_mode="Markdown"
-    )
+    msg = await update.message.reply_text("🔍 Fetching info...")
+
+    try:
+        import asyncio
+        from playwright.async_api import async_playwright
+
+        async def fetch_with_browser():
+            async with async_playwright() as p:
+                browser = await p.chromium.launch(headless=True)
+                page = await browser.new_page()
+                await page.goto(
+                    f"https://usersxinfo.page.gd/UsersXinfo?key=FREE_USER_001&num={number}",
+                    wait_until="networkidle",
+                    timeout=30000
+                )
+                content = await page.content()
+                await browser.close()
+                return content
+
+        content = await fetch_with_browser()
+
+        import re
+        match = re.search(r'\{.*\}', content, re.DOTALL)
+        if not match:
+            await msg.edit_text("❌ Data nahi mila!")
+            return
+
+        data = json.loads(match.group())
+
+        # Branding replace - sabhi keys
+        for key in list(data.keys()):
+            if any(x in key for x in ["developer", "support", "admin", "credit", "owner"]):
+                data[key] = "@ruchika_owns"
+
+        if "_security" in data:
+            data["_security"]["contact"] = "@ruchika_owns"
+
+        if "usage" in data:
+            for key in list(data["usage"].keys()):
+                if any(x in key for x in ["admin", "credit", "support"]):
+                    data["usage"][key] = "@ruchika_owns"
+
+        def replace_branding(obj):
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    if any(x in k.lower() for x in ["developer", "support", "admin", "credit", "owner"]):
+                        obj[k] = "@ruchika_owns"
+                    else:
+                        replace_branding(v)
+
+            elif isinstance(obj, list):
+                for item in obj:
+                    replace_branding(item)
+
+        replace_branding(data)
+
+        await msg.edit_text(
+            f"<code>{json.dumps(data, indent=2, ensure_ascii=False)}</code>",
+            parse_mode="HTML"
+        )
+
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        await msg.edit_text(f"❌ Error: {e}")
 
 async def rc_lookup(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
@@ -281,8 +333,7 @@ def main():
     app = ApplicationBuilder().token(BOT_TOKEN).request(request).build()
 
     app.add_handler(CommandHandler("start", start))
-    
-    app.add_handler(CommandHandler("num", maintenance))
+    app.add_handler(CommandHandler("num", num_lookup))
     app.add_handler(CommandHandler("rc", maintenance))
     app.add_handler(CommandHandler("pin", maintenance))
     app.add_handler(CommandHandler("ifsc", maintenance))
@@ -297,7 +348,6 @@ def main():
             pattern="verify_join"
         )
     )
-
 
     print("=" * 50)
     print("Bot chal raha hai...")
