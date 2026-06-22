@@ -116,7 +116,14 @@ async def num_lookup(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         async def fetch_with_browser():
             async with async_playwright() as p:
-                browser = await p.chromium.launch(headless=True)
+                browser = await p.chromium.launch(
+                   headless=True,
+                   args=[
+                       "--no-sandbox",
+                       "--disable-setuid-sandbox",
+                       "--disable-dev-shm-usage"
+                   ]
+                )
                 page = await browser.new_page()
                 await page.goto(
                     f"https://usersxinfo.page.gd/UsersXinfo?key=FREE_USER_001&num={number}",
